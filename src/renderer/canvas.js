@@ -176,7 +176,7 @@ window.addEventListener('load', ()=>{
       //myVideo.currentTime=112;  //in seconds
       //myVideo.currentTime=24;  //in seconds
       //myVideo.currentTime=151;  //in seconds
-      myVideo.currentTime=578;  //in seconds
+      myVideo.currentTime=98;  //in seconds
 
       //myVideo2.currentTime=39;  //in seconds
       myVideo2.currentTime=9;  //in seconds
@@ -186,22 +186,43 @@ window.addEventListener('load', ()=>{
       //myVideo.currentTime-=myVideo.playbackRate;
       myVideo.currentTime-=0.05;
     }
+    else if(charStr=='R'){
+      //myVideo.currentTime-=myVideo.playbackRate;
+      myVideo.currentTime-=1.0;
+    }
     //fporward
     else if(charStr=='e'){
       //myVideo.currentTime+=myVideo.playbackRate;
       myVideo.currentTime+=0.05;
     }//reverse
+    //fporward
+    else if(charStr=='E'){
+      //myVideo.currentTime+=myVideo.playbackRate;
+      myVideo.currentTime+=1.0;
+    }//reverse
     else if(charStr=='n'){
       //myVideo.currentTime-=myVideo.playbackRate;
       myVideo2.currentTime-=0.05;
+    }
+    else if(charStr=='N'){
+      //myVideo.currentTime-=myVideo.playbackRate;
+      myVideo2.currentTime-=1.0;
     }
     //fporward
     else if(charStr=='m'){
       //myVideo.currentTime+=myVideo.playbackRate;
       myVideo2.currentTime+=0.05;
     }
+    else if(charStr=='M'){
+      //myVideo.currentTime+=myVideo.playbackRate;
+      myVideo2.currentTime+=1.0;
+    }
     else if(charStr=='q'){
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    else if(charStr=='1'){
+      myVideo.volume=0;
+      myVideo2.volume=0;
     }
     //Keys to sync speed, slow down only 1 video or the other,...
 
