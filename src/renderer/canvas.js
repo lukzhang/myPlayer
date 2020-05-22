@@ -176,7 +176,7 @@ window.addEventListener('load', ()=>{
       //myVideo.currentTime=112;  //in seconds
       //myVideo.currentTime=24;  //in seconds
       //myVideo.currentTime=151;  //in seconds
-      myVideo.currentTime=98;  //in seconds
+      myVideo.currentTime=460;  //in seconds
 
       //myVideo2.currentTime=39;  //in seconds
       myVideo2.currentTime=9;  //in seconds
