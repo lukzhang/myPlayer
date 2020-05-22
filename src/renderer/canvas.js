@@ -1,9 +1,127 @@
 const myVideo = document.getElementById('my-video');
 const myVideo2 = document.getElementById('my-video2');
+let canvas;
+class canvasHandler{
+	constructor(canvas){
+		this.dragLine = false;
+		this.dragging = false;
+		this.dragStart = {x: 0, y: 0};
+		this.currentDrag = {x: 0, y: 0};
+		this.lastLine = [];
+		this.imgData = [];
+		this.drawnData = [];
+		this.clicked = false;
+		this.loc = {x: 0, y: 0};
+		this.counter = 0
+		this.el = canvas;
+		this.ctx = canvas.getContext("2d");
+		this.ctx.moveTo(this.loc.x, this.loc.y);
+		canvas.addEventListener("mousedown", (e)=>{
+			let location = translateMouse(this.el, e);
+			if(this.dragLine){
+				this.dragging = true
+				this.dragStart.x = location.x
+				this.dragStart.y = location.y
+				this.currentDrag.x = location.x
+				this.currentDrag.y = location.y
+				return
+			}
+			this.imgData.push(this.ctx.getImageData(0, 0, this.el.width, this.el.height));
+			this.ctx.beginPath()
+			this.ctx.moveTo(location.x, location.y);
+			this.lastLine = [{x: location.x, y: location.y}]
+			this.clicked = true;
+		});
+		canvas.addEventListener("mouseup", (e)=>{
+			if(this.dragging){
+				let location = translateMouse(this.el, e);
+				this.finalizeDrag(location.x-this.dragStart.x, location.y-this.dragStart.y)
+			}
+			this.clicked = false;
+			this.dragging = false;
+			this.ctx.closePath()
+		});
+		canvas.addEventListener("mousemove", (e)=>{
+			let location = translateMouse(this.el, e);
+			this.counter++
+			if(this.counter > 2){
+				this.counter = 0;
+			}else{
+				return
+			}
+			if(this.clicked){
+				this.moved(location.x, location.y);
+			}
+			if(this.dragging){
+				if(Math.pow(location.x-this.currentDrag.x, 2)+Math.pow(-this.currentDrag.y+location.y, 2) > 70){
+					this.drag(location.x-this.dragStart.x, location.y-this.dragStart.y)
+					this.currentDrag.x = location.x
+					this.currentDrag.y = location.y
+				}
+			}
+		});
+	}
+	clear(){
+		this.dragLine = false;
+		this.dragging = false;
+		this.dragStart = {x: 0, y: 0};
+		this.currentDrag = {x: 0, y: 0};
+		this.lastLine = [];
+		this.imgData = [];
+		this.drawnData = [];
+		this.clicked = false;
+		this.loc = {x: 0, y: 0};
+		this.counter = 0
+		this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+	}
+	revert(){
+		if(this.imgData.length){
+			this.drawnData.push(this.ctx.getImageData(0, 0, this.el.width, this.el.height));
+			this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+			this.ctx.putImageData(this.imgData.pop(), 0, 0)
+		}
+	}
+	redo(){
+		if(this.drawnData.length){
+			this.imgData.push(this.ctx.getImageData(0, 0, this.el.width, this.el.height));
+			this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+			this.ctx.putImageData(this.drawnData.pop(), 0, 0)
+		}
+	}
+	drag(x, y){
+		if(this.imgData.length){
+			this.ctx.clearRect(0, 0, this.el.width, this.el.height);
+			this.ctx.putImageData(this.imgData[this.imgData.length-1], 0, 0)
+		}
+		this.ctx.beginPath()
+		this.ctx.moveTo(this.lastLine[0].x+x, this.lastLine[0].y+y)
+		for(let i=1;i<this.lastLine.length;i++){
+			this.ctx.lineTo(this.lastLine[i].x+x, this.lastLine[i].y+y);
+			this.ctx.strokeStyle = "#ff0000";
+			this.ctx.stroke();
+		}
+		this.ctx.closePath()
+	}
+	finalizeDrag(x, y){
+		for(let i=0;i<this.lastLine.length;i++){
+			this.lastLine[i].x += x;
+			this.lastLine[i].y += y;
+		}
+	}
+	moved(x, y){
+		this.lastLine.push({x: x, y: y});
+		this.ctx.lineTo(x, y);
+		this.ctx.strokeStyle = "#ff0000";
+		this.ctx.stroke();
+	}
+}
+
+function translateMouse(el, e){
+	return {x: e.clientX-el.getBoundingClientRect().x, y: e.clientY-el.getBoundingClientRect().y};
+}
 
 window.addEventListener('load', ()=>{
-  const canvas = document.querySelector('#canvas');
-  const ctx = canvas.getContext('2d');
+  canvas = new canvasHandler(document.querySelector("#canvas"));
 
   var nodeConsole = require('console');
   var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
@@ -16,46 +134,24 @@ window.addEventListener('load', ()=>{
   
 
 
-  fitToContainer(canvas);
+  fitToContainer(canvas.el);
 
   function fitToContainer(canvas){
     // Make it visually fill the positioned parent
     canvas.style.width ='100%';
-    canvas.style.height='100%';
+    canvas.style.height='calc(100% - 40px)';
+    canvas.style.marginTop='40px';
     // ...then set the internal size to match
     canvas.width  = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
   }
 
   // //Resizing
-  // canvas.height = window.innerHeight;
+  //canvas.height = window.innerHeight;
   canvas.width = window.innerWidth;
-  
 
-  //variables
-  let painting = false;
 
-  function startPosition(){
-    painting = true;
-    draw(e);
-  }
-  function finishedPosition(){
-    painting = false;
-    ctx.beginPath();
-  }
-  function draw(e){
-    if(!painting) return;
-    ctx.lineWidth=3;
-    ctx.strokeStyle = "red";
-    ctx.lineCap = 'round';
-    ctx.lineTo(e.clientX, e.clientY);
-    ctx.stroke();
-    ctx.moveTo(e.clinetX, e.clientY);
-  }
-  //EventListeners
-  canvas.addEventListener('mousedown',startPosition);
-  canvas.addEventListener('mouseup',finishedPosition);
-  canvas.addEventListener('mousemove',draw);
+
 
   document.onkeypress = function(evt) {
     evt = evt || window.event;
