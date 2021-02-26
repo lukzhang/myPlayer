@@ -1,5 +1,6 @@
 const myVideo = document.getElementById('my-video');
 const myVideo2 = document.getElementById('my-video2');
+var volLevel;
 let canvas;
 class canvasHandler{
 	constructor(canvas){
@@ -196,8 +197,8 @@ window.addEventListener('load', ()=>{
     else if(charStr=='s'){
       
       
-      if(myVideo.playbackRate>0.1){
-        myVideo.playbackRate-=0.1;
+      if(myVideo.playbackRate>0.05){
+        myVideo.playbackRate-=0.05;
       }
       
       if(myVideo2.playbackRate>0){
@@ -266,16 +267,56 @@ window.addEventListener('load', ()=>{
         stack.push(tempStack.pop());
       }
       
+    }else if(charStr=='2'){
+      //****************SITUATIONS */
+      myVideo.currentTime=311;  //slowMessi.mp4   messi Touch upper side heel, quick control
+    }else if(charStr=='3'){
+      //****************SITUATIONS */
+      myVideo.currentTime=43;  //messi.mp4    inside cut fake - Cancel - feint - wide change direction
+    }else if(charStr=='4'){
+      //****************SITUATIONS */
+      myVideo.currentTime=447;  //messi.mp4    slowMessi: ANKLE 2 - side
+    }else if(charStr=='5'){
+      //****************SITUATIONS */
+      myVideo.currentTime=374;  //messi.mp4    slowMessi: ANKLE
+    }
+    else if(charStr=='6'){
+      //****************SITUATIONS */
+      myVideo.currentTime=374;  //slowMessi.mp4    Touch, move out of space, inside cut from space
+    }
+    else if(charStr=='7'){
+      //****************SITUATIONS */
+      myVideo.currentTime=338;  //messi.mp4    Reverse feint cut inside
+    }else if(charStr=='8'){
+      //****************SITUATIONS */
+      myVideo.currentTime=62;  //messi2016.mp4    Turn around, feint, circle (SHIELD)
+    }
+    else if(charStr=='9'){
+      //****************SITUATIONS */
+      myVideo.currentTime=117;  //messi650.mp4    Turn around, feint, circle
+    }
+    else if(charStr=='0'){
+      //****************SITUATIONS */
+      myVideo.currentTime=411;  ///messi650.mp4    Turn around, feint, circle (ANOTHER)
     }
     //go to time
     else if(charStr=='t'){
       //myVideo.currentTime=112;  //in seconds
       //myVideo.currentTime=24;  //in seconds
       //myVideo.currentTime=151;  //in seconds
-      myVideo.currentTime=460;  //in seconds
+      //myVideo.currentTime=728;  //INSIDE FOOT FEINT
+      myVideo.currentTime=1268; 
+      //myVideo.currentTime=167; //Inside CUT - SLOW MESSI
+      //myVideo.currentTime=291; //Inside CUT
+      //myVideo.currentTime=408; //SLOW MESSI -> INSIDE CUT
+      //myVideo.currentTime=462;
+      //myVideo.currentTime=98;  //in seconds
+      //myVideo.currentTime=15;  //in seconds
+      //myVideo.currentTime=27;
 
       //myVideo2.currentTime=39;  //in seconds
-      myVideo2.currentTime=9;  //in seconds
+      //myVideo2.currentTime=183;  //in seconds
+      //myVideo2.currentTime=75;
     }
     //reverse
     else if(charStr=='r'){
@@ -317,8 +358,14 @@ window.addEventListener('load', ()=>{
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     else if(charStr=='1'){
-      myVideo.volume=0;
-      myVideo2.volume=0;
+      if(myVideo.volume!=0){
+        volLevel=myVideo.volume;
+        myVideo.volume=0;
+        myVideo2.volume=0;
+      }
+      else{
+        myVideo.volume=volLevel;
+      }
     }
     //Keys to sync speed, slow down only 1 video or the other,...
 
