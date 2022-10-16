@@ -1,3 +1,5 @@
+As seen and used on my Youtube Channel: https://www.youtube.com/c/IndieFootballer
+
 # Rock Player
 A cross-platform video player based on `electron` and `ffmpeg`.
 
